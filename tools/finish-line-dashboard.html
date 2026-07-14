@@ -1,0 +1,230 @@
+<title>Video Production OS &#183; Finish Line</title>
+<style>
+  :root {
+    --bg:#14110d; --panel:#1d1914; --panel2:#241f18; --line:#383025;
+    --ink:#efe7d8; --muted:#a2957f; --accent:#d89b4a; --accent-deep:#a86f2a;
+    --done:#9dbb7a; --warn:#c96b4a; --pend:#8fa8b8;
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg:#f3ede2; --panel:#faf6ec; --panel2:#efe8d9; --line:#d9cfba; --ink:#241d12; --muted:#7a6d55; --accent:#a8701f; --accent-deep:#8a5a15; --done:#5d7d3c; --warn:#b04a2e; --pend:#4a7086; }
+  }
+  :root[data-theme="dark"] { --bg:#14110d; --panel:#1d1914; --panel2:#241f18; --line:#383025; --ink:#efe7d8; --muted:#a2957f; --accent:#d89b4a; --accent-deep:#a86f2a; --done:#9dbb7a; --warn:#c96b4a; --pend:#8fa8b8; }
+  :root[data-theme="light"] { --bg:#f3ede2; --panel:#faf6ec; --panel2:#efe8d9; --line:#d9cfba; --ink:#241d12; --muted:#7a6d55; --accent:#a8701f; --accent-deep:#8a5a15; --done:#5d7d3c; --warn:#b04a2e; --pend:#4a7086; }
+
+  body { background:var(--bg); color:var(--ink); font-family:"Avenir Next","Helvetica Neue",Arial,sans-serif; margin:0; line-height:1.5; }
+  .wrap { max-width:800px; margin:0 auto; padding:36px 20px 100px; }
+  .eyebrow { font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--accent); font-weight:600; }
+  h1 { font-family:"Avenir Next Condensed","Arial Narrow",sans-serif; font-weight:700; font-size:clamp(28px,5vw,40px); text-transform:uppercase; line-height:1.05; margin:10px 0 6px; }
+  .sub { color:var(--muted); font-size:14px; max-width:62ch; }
+  .sub b { color:var(--done); }
+
+  .progress { display:flex; align-items:center; gap:14px; margin:22px 0 8px; position:sticky; top:0; background:var(--bg); padding:10px 0; z-index:5; }
+  .bar { flex:1; height:6px; background:var(--panel2); border:1px solid var(--line); border-radius:3px; overflow:hidden; }
+  .bar i { display:block; height:100%; background:var(--accent); width:0%; transition:width .4s; }
+  .pct { font-family:"SF Mono",Menlo,monospace; font-size:13px; color:var(--accent); font-weight:700; min-width:90px; text-align:right; }
+
+  /* stuck panel */
+  .stuck { border:1px solid var(--warn); background:var(--panel2); margin:18px 0 8px; }
+  .stuck-head { padding:12px 16px; cursor:pointer; font-weight:700; letter-spacing:.1em; text-transform:uppercase; font-size:12.5px; color:var(--warn); display:flex; justify-content:space-between; }
+  .stuck-body { display:none; padding:0 16px 14px; }
+  .stuck.open .stuck-body { display:block; }
+  .fix { padding:8px 0; border-bottom:1px dashed var(--line); font-size:13.5px; }
+  .fix:last-child { border-bottom:none; }
+  .fix b { color:var(--warn); }
+
+  .part { margin:30px 0 10px; font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); font-weight:700; }
+  .part b { color:var(--accent); }
+
+  .card { border:1px solid var(--line); background:var(--panel); margin-bottom:10px; }
+  .card.done { border-color:var(--done); }
+  .card.done .body { display:none; }
+  .card.done.open .body { display:block; }
+  .head { display:flex; align-items:center; gap:10px; padding:12px 16px; flex-wrap:wrap; cursor:pointer; }
+  .num { font-family:"SF Mono",Menlo,monospace; font-size:11.5px; color:var(--accent); font-weight:700; border:1px solid var(--accent-deep); border-radius:2px; padding:2px 7px; min-width:26px; text-align:center; }
+  .card.done .num { color:var(--done); border-color:var(--done); }
+  .ttl { font-weight:700; letter-spacing:.05em; font-size:14px; flex:1; min-width:150px; text-transform:uppercase; }
+  .mark { font-size:12px; color:var(--muted); }
+  .card.done .mark { color:var(--done); font-weight:700; }
+  .body { border-top:1px solid var(--line); padding:14px 16px 16px; }
+  .steps { margin:0; padding-left:20px; display:grid; gap:7px; font-size:14px; }
+  .steps li::marker { color:var(--accent); font-weight:700; }
+  .steps b { color:var(--accent); font-weight:600; }
+  .promptbox { position:relative; margin-top:12px; }
+  .plabel { font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); font-weight:700; margin-bottom:4px; }
+  pre { background:var(--panel2); border:1px solid var(--line); border-radius:2px; padding:12px 14px; padding-right:70px; font-family:"SF Mono",Menlo,monospace; font-size:12px; line-height:1.55; white-space:pre-wrap; word-break:break-word; margin:0; color:var(--ink); }
+  .copy { position:absolute; top:26px; right:8px; background:var(--accent); color:#14110d; border:none; border-radius:2px; font-family:inherit; font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; padding:5px 10px; cursor:pointer; }
+  .copy.did { background:var(--done); }
+  .donebtn { margin-top:14px; width:100%; padding:11px; font-family:inherit; font-weight:700; letter-spacing:.12em; text-transform:uppercase; font-size:12px; border:1px solid var(--accent-deep); background:var(--accent); color:#14110d; cursor:pointer; border-radius:2px; }
+  .undobtn { margin-top:10px; width:100%; padding:8px; font-family:inherit; font-size:11px; letter-spacing:.1em; text-transform:uppercase; border:1px solid var(--line); background:none; color:var(--muted); cursor:pointer; border-radius:2px; }
+
+  .tracker { border:1px solid var(--line); background:var(--panel); }
+  .trow { display:flex; align-items:center; gap:12px; padding:11px 16px; border-bottom:1px dashed var(--line); font-size:13.5px; flex-wrap:wrap; }
+  .trow:last-child { border-bottom:none; }
+  .trow .what { flex:1; min-width:200px; }
+  .pill { font-size:10px; font-weight:700; letter-spacing:.12em; padding:3px 9px; border-radius:2px; text-transform:uppercase; color:#14110d; }
+  .pill.got { background:var(--done); } .pill.wait { background:var(--pend); } .pill.infilm { background:var(--accent); }
+
+  .resetrow { text-align:center; margin-top:30px; }
+  .resetbtn { background:none; border:1px solid var(--line); color:var(--muted); font-family:inherit; font-size:11px; letter-spacing:.1em; text-transform:uppercase; padding:8px 16px; cursor:pointer; border-radius:2px; }
+  .copy:focus-visible, .donebtn:focus-visible, .resetbtn:focus-visible, .undobtn:focus-visible { outline:2px solid var(--ink); outline-offset:2px; }
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">Video Production OS &#183; Client Film</div>
+  <h1>The Finish Line</h1>
+  <p class="sub"><b>Film One draft 2 is exported and filed.</b> What remains: one polish pass, the 30 second backdrop film, and delivery. No card is locked anymore, do them in any order, tick what you finish, click a done card to reread it. All AI budgets are spent, everything left is free tools. Your files live in your project folder, and in Canva under Uploads &#8594; your project.</p>
+
+  <div class="progress"><div class="bar"><i id="barfill"></i></div><div class="pct" id="pcttext">0 of 12</div></div>
+
+  <div class="stuck" id="stuck">
+    <div class="stuck-head">When stuck, read this first <span>&#9660;</span></div>
+    <div class="stuck-body">
+      <div class="fix"><b>Overlay won't land / replaces the video:</b> click the page first, then CLICK the file's thumbnail in Uploads. Never drag files onto a page that has a video.</div>
+      <div class="fix"><b>Overlay slides across pages:</b> it was dropped on the timeline. Delete it, then add it by clicking, it must live on the page, only music lives on the timeline.</div>
+      <div class="fix"><b>Durations misbehave:</b> always TYPE them via the clock icon. Never drag page edges, never press Sync now.</div>
+      <div class="fix"><b>Trimming a clip:</b> about 1 second, starting just before the action peaks, so the peak happens during the page.</div>
+      <div class="fix"><b>Music feels off:</b> don't sync 37 pages. Drag the whole track until its big drop lands on the hero number page, then check only the five number pages.</div>
+      <div class="fix"><b>Need slow-then-fast drama:</b> same clip on two pages, first half at 0.5x speed with text, second half at 2x with no text.</div>
+    </div>
+  </div>
+
+  <div id="cards"></div>
+
+  <div class="part"><b>Client tracker</b> &#183; status only, nothing for you to do until items arrive</div>
+  <div class="tracker">
+    <div class="trow"><span class="what">Team photos</span><span class="pill got">example status</span><span style="color:var(--muted); font-size:12px;">file received photos into the project</span></div>
+    <div class="trow"><span class="what">Final figures for the pending brand</span><span class="pill wait">waiting</span><span style="color:var(--muted); font-size:12px;">film carries [TO COME] until they arrive</span></div>
+    <div class="trow"><span class="what">Metric wording checks (Growth vs Achievement)</span><span class="pill wait">waiting</span></div>
+    <div class="trow"><span class="what">LED screen ratio and resolution</span><span class="pill wait">waiting</span><span style="color:var(--muted); font-size:12px;">built 16:9, reframe only if venue differs</span></div>
+    <div class="trow"><span class="what">Creative changes needing client sign off</span><span class="pill infilm">in film as 3</span><span style="color:var(--muted); font-size:12px;">flag changes when sending drafts</span></div>
+  </div>
+
+  <div class="resetrow"><button class="resetbtn" id="resetbtn">Reset all progress</button></div>
+</div>
+
+<script>
+const CARDS = [
+{ part:"Part A &#183; Film One polish pass", ttl:"Watch draft 2 properly, then rate it", steps:[
+  "Play <b>your latest draft export</b> (your project folder &#8594; 07_EXPORTS) once on your phone and once on a TV, no pausing, no editing.",
+  "Write down the page numbers that feel like slides (too long, too static, text unreadable).",
+  "Rate it out of 10. <b>7 or above:</b> fix only the pages you noted. <b>5 to 6:</b> the fix is pacing, shorten the noted pages to the BUILD_SHEET durations. <b>4 or below:</b> stop and tell me the top 3 problems, we diagnose together before you touch anything."
+]},
+{ ttl:"The one-drag music sync", steps:[
+  "In Canva, play your track and find its biggest drop (the moment the drums slam).",
+  "Drag the whole audio strip left or right until that drop lands exactly where the <b>hero number page starts</b>. That single drag is 80% of all syncing.",
+  "Then check only the number pages: the hero stat, each brand stat, and the final title. If one starts clearly off a beat dot, type a slightly longer or shorter duration on the page BEFORE it.",
+  "Never press Sync now. Never sync the fast pages, the steady pulse covers them."
+]},
+{ ttl:"Sound layer, risers and booms", steps:[
+  "Elements &#8594; Audio, search the two terms below (copy buttons). Download one riser, one boom, both free.",
+  "Place a riser so it ENDS exactly where each number page begins (five places).",
+  "Place a boom starting exactly ON each number page.",
+  "The half second before hero number: split the music strip at the black gap page and pull that tiny segment's volume near zero. Silence, then slam.",
+  "Test: close your eyes and play the film. The hits alone should tell you where every number is."
+], prompts:[{label:"Audio search 1", text:"riser whoosh"},{label:"Audio search 2", text:"cinematic boom"}]},
+{ ttl:"One grade for everything", steps:[
+  "Click any one photo &#8594; Edit &#8594; Filters, pick ONE warm cinematic filter, remember its name and strength.",
+  "Use the paint roller (copy style) tool to stamp that exact filter onto every photo and video, one look everywhere.",
+  "Skip grain. Then check every number page: digits razor sharp, background dark enough to read instantly."
+]},
+{ ttl:"The team close, real faces now", steps:[
+  "When the client sends team portraits, file them in <b>05_MARKETS_TEAM &#8594; team_portraits</b> and upload to Canva.",
+  "Pick the best 9 (sharp, well lit, mixed seniority). On the team page (P36), replace the placeholder with a <b>3 by 3 grid</b>: Elements &#8594; search 'photo grid' and pick a clean square grid frame, drop one portrait per cell.",
+  "Black background around the grid, 2.5s duration, Animate &#8594; Breathe. Faces then H2, that's the emotional close."
+]},
+{ ttl:"Two free upgrades from today's files", steps:[
+  "Swap the static stag card on P17 with <b>your logo animation clip</b> (its brand folder), 1s. The gold animated stag beats the cream card.",
+  "The accelerate ending the client wanted: if your generated car clip worked, place it between the team page and H2 with the line below typed on top (Archivo caps ivory), first half 0.5x with text, second half 2x without. If no clip survived, search Canva Videos for 'race car night light trails' and do the same, stock works identically.",
+  "Keep it to 1.5 to 2 seconds total. Dark footage only."
+], prompts:[{label:"The line to type on the slow half", text:"LET'S ACCELERATE TOGETHER."}]},
+
+{ part:"Part B &#183; Film Two, the 30 second backdrop", ttl:"Build the 5 calm pages", steps:[
+  "File &#8594; Make a copy of the film project, delete all pages, build 5:",
+  "<b>Page 1</b> (6s): black background, small crest high (client_logo.svg in 01_OPENING), text YOUR TITLE fading in (Animate &#8594; Fade).",
+  "<b>Page 2</b> (8s): the three number overlays from 06_OVERLAYS (your three headline number overlays) placed HIGH on the page, Animate &#8594; Fade. No dim versions, no count ups, calm.",
+  "<b>Page 3</b> (8s): the real pack shots now (your clean pack shot PNGs from the brand folders), sliding in from the edges (Animate &#8594; Pan), settling far left and far right, LOW. Center stays empty.",
+  "<b>Page 4</b> (5s): everything arranged exactly like your_backdrop_4k.png (01_OPENING), use it as your reference.",
+  "<b>Page 5</b> (3s): your_backdrop_4k.png itself, full bleed, no animation. The film ends frozen on it."
+]},
+{ ttl:"Film Two music, then silence", steps:[
+  "Same musical world but calm: Elements &#8594; Audio, search 'cinematic ambient soft'.",
+  "Fade the track out completely by 0:29 (drag the fade handle on the strip's end). His first sentence must land in silence."
+]},
+{ ttl:"Export the wall set", steps:[
+  "Export Film Two as MP4.",
+  "your_backdrop_4k.png already exists in 01_OPENING, that's the hold image the venue displays during the speech, an image beats any paused video.",
+  "One more export: open the wall design, delete the H2 text lines, export as <b>backdrop_clean_no_text.png</b>, the timeless version for photographs. File it in 01_OPENING."
+]},
+
+{ part:"Part C &#183; Delivery", ttl:"The error hunt (protects you from a wrong number on a boardroom screen)", steps:[
+  "Against your saved numbers: every percentage, every brand spelling, +53% style on growth, plain hero number on achievement.",
+  "Check nothing important sits in the outer 12% of the frame, LED screens crop.",
+  "Watch the low res test on phone AND TV one last time. Errors only, no taste changes, taste is closed."
+]},
+{ ttl:"Real audio swap (if using the Instagram sound)", steps:[
+  "Export Film One, bring it into the edits app, attach the Instagram audio.",
+  "Check the five stops still land on its beat. If one drifts, nudge the audio start time. Never re-edit the film.",
+  "Licensing reality: reel audio is licensed for Instagram, for the seminar keep the Canva track version as the safe master, the IG version is the bonus cut."
+]},
+{ ttl:"Package and send", steps:[
+  "One folder: <b>PROJECT_DELIVERY</b>. Inside: Film One final, Film Two, your_backdrop_4k.png, backdrop_clean_no_text.png, and the 9:16 phone cut (Canva Resize to 1080 x 1920, fix framing, export).",
+  "Send it with one line: 'the pending brand numbers drop in the moment you send them, everything else is final.'",
+  "Then close the laptop. Whatever small thing you notice at 11pm ships in H2."
+]}
+];
+
+const KEY = "vpo-finish-v1";
+let done;
+try { done = JSON.parse(localStorage.getItem(KEY)) || []; } catch(e) { done = []; }
+done = CARDS.map((_, i) => done[i] || false);
+function save() { localStorage.setItem(KEY, JSON.stringify(done)); }
+
+const wrap = document.getElementById("cards");
+function render() {
+  wrap.innerHTML = "";
+  CARDS.forEach((card, i) => {
+    if (card.part) { const p = document.createElement("div"); p.className = "part"; p.innerHTML = "<b>" + card.part + "</b>"; wrap.appendChild(p); }
+    const div = document.createElement("div");
+    div.className = "card" + (done[i] ? " done" : "");
+    let html = `<div class="head" data-i="${i}"><span class="num">${i+1}</span><span class="ttl">${card.ttl}</span><span class="mark">${done[i] ? "&#10003; done" : "open"}</span></div>`;
+    html += `<div class="body"><ol class="steps">` + card.steps.map(s => `<li>${s}</li>`).join("") + `</ol>`;
+    (card.prompts || []).forEach((p, k) => {
+      html += `<div class="promptbox"><div class="plabel">${p.label}</div><pre id="pre_${i}_${k}">${p.text}</pre><button class="copy" data-copy="pre_${i}_${k}">Copy</button></div>`;
+    });
+    html += done[i] ? `<button class="undobtn" data-undo="${i}">Mark as not done</button>` : `<button class="donebtn" data-done="${i}">Done</button>`;
+    html += `</div>`;
+    div.innerHTML = html;
+    wrap.appendChild(div);
+  });
+  const n = done.filter(Boolean).length;
+  document.getElementById("barfill").style.width = (n / CARDS.length * 100) + "%";
+  document.getElementById("pcttext").textContent = n + " of " + CARDS.length;
+}
+
+wrap.addEventListener("click", async e => {
+  const cp = e.target.closest("[data-copy]");
+  if (cp) {
+    const txt = document.getElementById(cp.dataset.copy).textContent;
+    try { await navigator.clipboard.writeText(txt); } catch(err) {
+      const r = document.createRange(); r.selectNodeContents(document.getElementById(cp.dataset.copy));
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r); document.execCommand("copy"); s.removeAllRanges();
+    }
+    cp.textContent = "Copied"; cp.classList.add("did");
+    setTimeout(() => { cp.textContent = "Copy"; cp.classList.remove("did"); }, 1500);
+    return;
+  }
+  const db = e.target.closest("[data-done]");
+  if (db) { done[db.dataset.done] = true; save(); render(); return; }
+  const ub = e.target.closest("[data-undo]");
+  if (ub) { done[ub.dataset.undo] = false; save(); render(); return; }
+  const hd = e.target.closest(".head");
+  if (hd) { const cd = hd.parentElement; if (cd.classList.contains("done")) cd.classList.toggle("open"); }
+});
+document.getElementById("stuck").querySelector(".stuck-head").addEventListener("click", () => {
+  document.getElementById("stuck").classList.toggle("open");
+});
+document.getElementById("resetbtn").addEventListener("click", () => {
+  if (confirm("Wipe all progress on the finish line checklist?")) { done = CARDS.map(() => false); save(); render(); }
+});
+render();
+</script>

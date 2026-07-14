@@ -1,0 +1,32 @@
+PAGE BY PAGE BUILD SHEET TEMPLATE (60 sec results film, ~37 Canva pages)
+Rules: durations TYPED with the clock icon, never dragged. No transitions except slow dissolves in the opening.
+Text overlays are transparent PNGs exported from one Canva design, digits in your accent color, labels in ivory caps.
+"DIM BAKED IN" = export number overlays with a 50% black full-frame background so no rectangle step is ever needed.
+
+SCENE 1, OPENING (soft, dissolves allowed here only)
+P1  2.5s  black page, headline typed live, serif, Animate > Typewriter
+P2-P4 1.5s each, dawn/territory shots, video first then stills with Animate > Zoom
+
+SCENE 2, THE HERO NUMBER
+P5  0.2s  solid black (the silence gap)
+P6  3.5s  hero macro clip trim 0-3s + hero number overlay (dim baked in) > Pop, hold 1.2s min
+P7  3.0s  same clip trim 3-5s + supporting stats smaller > Pop
+
+SCENE 3, THE SPRINT (0.5-0.7s pages, cuts on drum hits, clip audio on low)
+P8-P14  alternate: triptych (3 vertical clips side by side) / full screen wildest moment /
+        punch-in duplicate at 130% / one event photo > Zoom. Two short copy lines max.
+
+SCENES 4-6, BRAND BLOCKS (one per brand, alternate slow-fast-slow)
+pattern: footage clip 2s > execution photo Breathe 1.5s > logo card 0.8s > black 0.1s >
+         footage + brand number overlay > Pop 2-2.5s
+fast brand variant: 4 pages of 0.5s then the number page.
+
+SCENE 7, THE MAP
+P29 map heading overlay 1.5s, then same dark map on 4 pages, Animate > Zoom,
+    one territory count per page (largest number first), 1.5s each, then key accounts 1.5s.
+
+SCENE 8, THE CLOSE
+2 black pages with closing lines (Fade) > team grid page 2.5s (Breathe) >
+optional accelerate clip 1.5s > final title page 1.5s > Pop on the last drum hit. HARD END, no fade.
+
+WHEN ALL PAGES EXIST: play once end to end without touching anything. Delete whatever feels like a slide.
